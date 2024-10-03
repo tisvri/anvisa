@@ -260,7 +260,7 @@ st.plotly_chart(vertical_bar, use_container_width=True)
 
 
 st.dataframe(
-    anvisa_df[['Patrocinador do Estudo', 'Nome ou Código do Medicamento Experimental', 'Tipo de Medicamento Experimental', 'Doença', 'Fase do Estudo', 'Situação do Estudo']],
+    anvisa_df[['Patrocinador do Estudo', 'Nome ou Código do Medicamento Experimental', 'Tipo de Medicamento Experimental', 'Doença', 'Fase do Estudo', 'Situação do Estudo', 'Instituição de Pesquisa', 'Investigador', 'Número de Pacientes']],
     column_config= 
     {
         'Número do Processo': st.column_config.TextColumn()
