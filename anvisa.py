@@ -27,6 +27,8 @@ if 'situacao_estudo' not in st.session_state:
     st.session_state['situacao_estudo'] = []
 if 'fase_estudo' not in st.session_state:
     st.session_state['fase_estudo'] = []
+if 'doencas' not in st.session_state:
+    st.session_state['doencas'] = []
 
 
 @st.cache_data
@@ -56,6 +58,8 @@ def filter_dataframe(dataframe: pd.DataFrame) -> pd.DataFrame:
         dataframe = dataframe[dataframe['Situação do Estudo'].isin(st.session_state['situacao_estudo'])]
     if st.session_state['fase_estudo']:
         dataframe = dataframe[dataframe['Fase do Estudo'].isin(st.session_state['fase_estudo'])]
+    if st.session_state['doencas']:
+        dataframe = dataframe[dataframe['Doença'].isin(st.session_state['doencas'])]
 
     return dataframe
 
@@ -126,7 +130,8 @@ with st.sidebar:
             placeholder='Selecione Um ou Vários Valores'
         )
         st.session_state['classe_terapeutica'] = classes_terapeuticas
-    
+
+    # Fase do Estudo
     with st.expander('Fase do Estudo'):
         fases_dos_estudos = st.multiselect(
             label='Filtro Multiseleção',
@@ -135,6 +140,16 @@ with st.sidebar:
         )
 
         st.session_state['fase_estudo'] = fases_dos_estudos
+
+    # Doenças
+    with st.expander('Doenças'):
+        fases_dos_estudos = st.multiselect(
+            label='Filtro Multiseleção',
+            options=anvisa_df['Doença'].unique().tolist(),
+            placeholder='Selecione Um ou Vários Valores'
+        )
+
+        st.session_state['doencas'] = fases_dos_estudos
 
 # st.write(st.session_state)
 anvisa_df = filter_dataframe(anvisa_df)
@@ -282,7 +297,7 @@ st.plotly_chart(vertical_bar, use_container_width=True)
 st.title('Tabela Puramentes com Dados da Anvisa')
 
 st.dataframe(
-    anvisa_df[['Patrocinador do Estudo', 'Nome ou Código do Medicamento Experimental', 'Tipo de Medicamento Experimental', 'Doença', 'Fase do Estudo', 'Situação do Estudo', 'Instituição de Pesquisa', 'Investigador', 'Número de Pacientes']],
+    anvisa_df[['Número do Processo','Patrocinador do Estudo', 'Nome ou Código do Medicamento Experimental', 'Tipo de Medicamento Experimental', 'Doença', 'Fase do Estudo', 'Situação do Estudo', 'Instituição de Pesquisa', 'Investigador', 'Número de Pacientes']],
     column_config= 
     {
         'Número do Processo': st.column_config.TextColumn()
@@ -292,43 +307,43 @@ st.dataframe(
 
 
 
-with st.expander(label="Tabela com Datas Vinculadas ao Clinical Trials (Incompleta)"):
-    av1, av2, av3 = st.columns([1, 1, 1], gap='large')
+# with st.expander(label="Tabela com Datas Vinculadas ao Clinical Trials (Incompleta)"):
+#     av1, av2, av3 = st.columns([1, 1, 1], gap='large')
 
-    data = st.text_input('Selecione uma data ao Start Date (YYYY)')
+#     data = st.text_input('Selecione uma data ao Start Date (YYYY)')
 
-    if data:
+#     if data:
         
-        anvisa_v2_df = anvisa_v2_df.loc[anvisa_v2_df['Start Date'] >=  data]
+#         anvisa_v2_df = anvisa_v2_df.loc[anvisa_v2_df['Start Date'] >=  data]
 
-        # st.write(anvisa_v2_df.loc[anvisa_v2_df['Start Date'] >=  f'{ano}'])
-        # st.write(anvisa_v2_df.loc[anvisa_v2_df['First Posted'] ])
-    foo2 = len(anvisa_v2_df['Nome do Protocolo Clínico'].unique().tolist())
+#         # st.write(anvisa_v2_df.loc[anvisa_v2_df['Start Date'] >=  f'{ano}'])
+#         # st.write(anvisa_v2_df.loc[anvisa_v2_df['First Posted'] ])
+#     foo2 = len(anvisa_v2_df['Nome do Protocolo Clínico'].unique().tolist())
     
 
 
-    av1.metric(
-        label="Total de Registros Únicos sem Data",
-        value= foo
-        )
+#     av1.metric(
+#         label="Total de Registros Únicos sem Data",
+#         value= foo
+#         )
     
-    av2.metric(
-        label="Total de Registros Únicos com Data",
-        value= foo2
-        )
+#     av2.metric(
+#         label="Total de Registros Únicos com Data",
+#         value= foo2
+#         )
     
-    av3.metric(
-        label= r"% dos Dados com Data/Dados sem Data",
-        value= f"{foo2 / foo:.3%}".replace('.', ',')
-        )
+#     av3.metric(
+#         label= r"% dos Dados com Data/Dados sem Data",
+#         value= f"{foo2 / foo:.3%}".replace('.', ',')
+#         )
     
 
-    st.dataframe(
-        anvisa_v2_df[['Patrocinador do Estudo', 'Nome ou Código do Medicamento Experimental', 'Tipo de Medicamento Experimental', 'Doença', 'Fase do Estudo', 'Situação do Estudo', 'Instituição de Pesquisa', 'Investigador', 'Número de Pacientes', 'Completion Date', 'Start Date', 'First Posted']],
-        column_config=
-        {
-            'Completion Date': st.column_config.DateColumn(format="DD/MM/YYYY"),
-            'Start Date': st.column_config.DateColumn(format='DD/MM/YYYY'),
-            'First Posted': st.column_config.DateColumn(format='DD/MM/YYYY')
-        }
-        )
+#     st.dataframe(
+#         anvisa_v2_df[['Patrocinador do Estudo', 'Nome ou Código do Medicamento Experimental', 'Tipo de Medicamento Experimental', 'Doença', 'Fase do Estudo', 'Situação do Estudo', 'Instituição de Pesquisa', 'Investigador', 'Número de Pacientes', 'Completion Date', 'Start Date', 'First Posted']],
+#         column_config=
+#         {
+#             'Completion Date': st.column_config.DateColumn(format="DD/MM/YYYY"),
+#             'Start Date': st.column_config.DateColumn(format='DD/MM/YYYY'),
+#             'First Posted': st.column_config.DateColumn(format='DD/MM/YYYY')
+#         }
+#         )
