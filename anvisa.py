@@ -25,6 +25,8 @@ if 'classe_terapeutica' not in st.session_state:
     st.session_state['classe_terapeutica'] = []
 if 'situacao_estudo' not in st.session_state:
     st.session_state['situacao_estudo'] = []
+if 'fase_estudo' not in st.session_state:
+    st.session_state['fase_estudo'] = []
 
 
 @st.cache_data
@@ -52,7 +54,9 @@ def filter_dataframe(dataframe: pd.DataFrame) -> pd.DataFrame:
         dataframe = dataframe[dataframe['Classe Terapêutica'].isin(st.session_state['classe_terapeutica'])]
     if st.session_state['situacao_estudo']:
         dataframe = dataframe[dataframe['Situação do Estudo'].isin(st.session_state['situacao_estudo'])]
-    
+    if st.session_state['fase_estudo']:
+        dataframe = dataframe[dataframe['Fase do Estudo'].isin(st.session_state['fase_estudo'])]
+
     return dataframe
 
 #############################################################################################################
@@ -122,6 +126,15 @@ with st.sidebar:
             placeholder='Selecione Um ou Vários Valores'
         )
         st.session_state['classe_terapeutica'] = classes_terapeuticas
+    
+    with st.expander('Fase do Estudo'):
+        fases_dos_estudos = st.multiselect(
+            label='Filtro Multiseleção',
+            options=anvisa_df['Fase do Estudo'].unique().tolist(),
+            placeholder='Selecione Um ou Vários Valores'
+        )
+
+        st.session_state['fase_estudo'] = fases_dos_estudos
 
 # st.write(st.session_state)
 anvisa_df = filter_dataframe(anvisa_df)
