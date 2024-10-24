@@ -296,13 +296,19 @@ st.plotly_chart(vertical_bar, use_container_width=True)
 
 st.title('Tabela Puramentes com Dados da Anvisa')
 
+
 st.dataframe(
-    anvisa_df[['Número do Processo','Patrocinador do Estudo', 'Nome ou Código do Medicamento Experimental', 'Tipo de Medicamento Experimental', 'Doença', 'Fase do Estudo', 'Situação do Estudo', 'Instituição de Pesquisa', 'Investigador', 'Número de Pacientes']],
+    anvisa_df[['Número do Processo', 'Link do Processo','Patrocinador do Estudo', 'Nome ou Código do Medicamento Experimental', 'Tipo de Medicamento Experimental', 'Doença', 'Fase do Estudo', 'Situação do Estudo', 'Instituição de Pesquisa', 'Investigador', 'Número de Pacientes']],
     column_config= 
     {
-        'Número do Processo': st.column_config.TextColumn()
-    }
+        'Número do Processo': st.column_config.TextColumn(),
+        'Link do Processo': st.column_config.LinkColumn(display_text="Clique Aqui 🤠")
+    },
+    hide_index=True
     )
+
+
+st.link_button(label='PubChem', url='https://pubchem.ncbi.nlm.nih.gov/')
 
 
 
